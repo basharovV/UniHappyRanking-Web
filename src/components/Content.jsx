@@ -11,6 +11,9 @@ import rankings from '../assets/world_rankings_with_twitter.json';
 
 const useStyles = makeStyles(theme => ({
     root: {
+        flexGrow: 1,
+        display: 'contents',
+        height: '100%',
         marginTop: theme.spacing(4)
     },
     paper: {
@@ -23,8 +26,17 @@ const useStyles = makeStyles(theme => ({
     },
     card: {
         minWidth: 400,
-        width: '100%'
+        width: '100%',
+        display: 'flex'
     },
+    content: {
+        display: 'flex'
+    },
+    rank: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        flexDirection: 'column'
+    }
 }));
 
 export default function Content() {
@@ -37,11 +49,14 @@ export default function Content() {
                     {rankings.map(ranking => (
                         <ListItem className={classes.item} key={ranking.field1}>
                             <Card className={classes.card} variant="outlined">
-                                <CardContent>
-                                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                                <div className={classes.rank}>
+                                <Typography color="textSecondary" gutterBottom>
                                         Rank: {ranking.world_rank} / {rankings.length}
                                     </Typography>
-                                    <Typography variant="p" component="h3">
+                                    <Typography variant="body2">from 50 tweets</Typography>
+                                </div>
+                                <CardContent className={classes.content}>
+                                    <Typography variant="body1" component="h3">
                                         {ranking.institution}
                                     </Typography>
                                 </CardContent>
