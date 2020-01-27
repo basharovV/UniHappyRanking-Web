@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
-import rankings from '../assets/world_rankings_with_twitter.json';
+import rankings from '../assets/happiness_ranking_min_50_tweets.json';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -27,17 +28,39 @@ const useStyles = makeStyles(theme => ({
     card: {
         minWidth: 400,
         width: '100%',
-        display: 'flex'
+        display: 'flex',
+        flexDirection: 'column'
     },
     content: {
-        display: 'flex'
+        paddingTop: 0,
+        display: 'flex',
     },
     rank: {
         padding: theme.spacing(2),
-        display: 'flex',
-        flexDirection: 'column'
+        display: 'flex'
+    },
+    tweets_info: {
+        color: "#C9C9C9",
+        marginLeft: theme.spacing(1)
+    },
+    title: {
+        paddingTop: 0
+    },
+    uni_link: {
+        textDecoration: 'none',
+        color: 'black'
     }
 }));
+
+/**
+ * 
+ * @param {String} uniName The name of the university
+ */
+const getGithubUrl = (uniName) => {
+    const formatted = uniName.replace(' ', '_').toLowerCase()
+    const csved = `${formatted}.csv`
+    return `https://github.com/basharovV/UniHappyRanking/blob/master/tweets-data/${csved}`
+}
 
 export default function Content() {
     const classes = useStyles();
@@ -46,18 +69,24 @@ export default function Content() {
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={0} style={{ maxHeight: "100%", minWidth: '600px', overflow: 'auto' }}>
                 <List>
-                    {rankings.map(ranking => (
+                    {rankings.map((ranking, idx) => (
                         <ListItem className={classes.item} key={ranking.field1}>
                             <Card className={classes.card} variant="outlined">
                                 <div className={classes.rank}>
-                                <Typography color="textSecondary" gutterBottom>
-                                        Rank: {ranking.world_rank} / {rankings.length}
+                                    <Typography color="textSecondary" gutterBottom>
+                                        Rank: <span style={{ color: "#5700FF", fontWeight: 'bold' }}> {idx + 1} </span>/ {rankings.length}
                                     </Typography>
-                                    <Typography variant="body2">from 50 tweets</Typography>
+                                    <Typography className={classes.tweets_info} variant="body2">
+                                        <Link href={getGithubUrl(ranking.institution)}>
+                                            from {ranking.total} tweets ({ranking.positive} pos, {ranking.negative} neg) ℹ
+                                        </Link>
+                                    </Typography>
                                 </div>
                                 <CardContent className={classes.content}>
-                                    <Typography variant="body1" component="h3">
-                                        {ranking.institution}
+                                    <Typography className={classes.title} variant="body1" component="h3">
+                                        <Link className={classes.uni_link} href={`https://twitter.com/${ranking.twitter_handle}`}>
+                                            {ranking.institution}
+                                        </Link>
                                     </Typography>
                                 </CardContent>
                             </Card>
